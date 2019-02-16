@@ -13,7 +13,16 @@ class RedditConfig(peewee.Model):
         database = db
 
 
+class RedditPages(peewee.Model):
+    url = peewee.CharField(max_length=250, primary_key=True,null=True)
+    reddit_config = peewee.ForeignKeyField(RedditConfig)
+
+    class Meta:
+        database = db
+
+
 class Config(peewee.Model):
+    md5 = peewee.CharField(max_length=32, null=True)
     reddit_config = peewee.ForeignKeyField(RedditConfig)
 
     class Meta:
@@ -26,14 +35,11 @@ if __name__ == '__main__':
     except peewee.OperationalError:
         print('Tabela Author ja existe!')
     try:
+        RedditPages.create_table()
+    except peewee.OperationalError:
+        print('Tabela Author ja existe!')
+    try:
         Config.create_table()
     except peewee.OperationalError:
         print('Tabela Author ja existe!')
 
-    rc =  RedditConfig.create(client_id='123',
-                        client_secret='AWDAS',
-                        password='QWEQW',
-                        user_agent='QWEQW',
-                        username='QWEQWE')
-
-    config = Config.create(reddit_config=rc)

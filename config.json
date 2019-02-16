@@ -1,0 +1,26 @@
+{
+  "reddit_config": {
+    "client_id": "12312312",
+    "client_secret": "123s123",
+    "password": "asdj76412312312312",
+    "user_agent": "gilmar",
+    "username": "'2131231231231231",
+    "pages": [
+      {
+        "url": "https://www.reddit.com/r/mentalhealth"
+      },
+      {
+        "url": "https://www.reddit.com/r/depression"
+      },
+      {
+        "url": "https://www.reddit.com/r/bipolar"
+      },
+      {
+        "url": "https://www.reddit.com/r/ptsd"
+      },
+      {
+        "url": "https://www.reddit.com/r/ADHD/"
+      }
+    ]
+  }
+}

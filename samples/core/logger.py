@@ -11,7 +11,7 @@ class Logger:
         self.logger = logging.getLogger(__file__)
         self.logger.setLevel(logging.DEBUG)
         # create formatter
-        self.formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s')
+        self.formatter = logging.Formatter('%(asctime)s %(threadName)s %(levelname)s %(name)s: %(message)s')
 
         # create console handler and set level to debug
         self.ch = logging.StreamHandler()
