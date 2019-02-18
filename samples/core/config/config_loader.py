@@ -1,14 +1,13 @@
 import json
-import logging
-
 import os
 
 from peewee import DoesNotExist
 
-from core.config.config import *
+from core.util import md5_file
 from core.logger import Logger
-from core.crypt import md5
 from core.path import Path
+from core.persistence.db import TrasactionManager
+from core.persistence.models import Config, RedditConfig, RedditPage
 
 
 class ConfigLoader:
@@ -21,9 +20,11 @@ class ConfigLoader:
             ConfigLoader.log.i("Carregando configuracoes do Banco")
             config = Config.get(Config.id == '1').get()
             ConfigLoader.log.i("verificando se ha alteracoes na configuracao")
-            if config.md5 == md5(json_file_path):
+            if config.md5 == md5_file(json_file_path):
                 ConfigLoader.log.i("nao ha ateracoes")
                 return config
+            else:
+                TrasactionManager.trasaction(Config.delete(),RedditConfig.delete(),RedditPage.delete())
         except DoesNotExist:
             pass
         return ConfigLoader.load_config(json_file_path)
@@ -33,22 +34,23 @@ class ConfigLoader:
         ConfigLoader.log.i("Carregando configuracoes do JSON")
         with open(json_file_path) as json_file:
             data = json.load(json_file)
-            ConfigLoader.log.i("Atualziando reddit_config")
             reddit_config = RedditConfig.insert(client_id=data['reddit_config']['client_id'],
                                                 client_secret=data['reddit_config']['client_secret'],
                                                 password=data['reddit_config']['password'],
                                                 user_agent=data['reddit_config']['user_agent'],
                                                 username=data['reddit_config']['username'],
                                                 id=1).on_conflict(
-                'replace').execute()
+                'replace')
             reddit_pages = []
             for page in data['reddit_config']['pages']:
-                reddit_page = {'url': page['url'], 'reddit_config': reddit_config}
+                reddit_page = {'url': page['url'], 'reddit_config_id': 1}
                 reddit_pages.append(reddit_page)
-            ConfigLoader.log.d("Atualziando paginas")
-            RedditPages.insert_many(reddit_pages).on_conflict('replace').execute()
-            ConfigLoader.log.d("Atualziando config")
-        return Config.insert(id='1', reddit_config=reddit_config,
-                             md5=md5(json_file_path)).on_conflict(
-            'replace').execute()
+            pages = RedditPage.insert_many(reddit_pages).on_conflict('replace')
+            config = Config.insert(id='1', reddit_config_id=1,
+                                   md5=md5_file(json_file_path)).on_conflict('replace')
+            ConfigLoader.log.i("Autalizando configuracoes no banco ")
+            if TrasactionManager.trasaction(reddit_config, pages, config) is TrasactionManager.SUCESS:
+                return Config.get(Config.id == '1').get()
+            return None
+
 

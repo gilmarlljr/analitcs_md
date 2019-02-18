@@ -1,3 +1,5 @@
 praw==6.0.0
 flask==1.0.2
 peewee==3.8.2
+tensorflow
+empath
