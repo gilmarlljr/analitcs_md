@@ -54,8 +54,6 @@ class TrasactionManager:
         with TrasactionManager.database.atomic() as transaction:
             try:
                 for arg in args:
-                    TrasactionManager.log.i(
-                        "Executando transação [ " + arg.table.__name__ + " | " + arg.__class__.__name__ + " ]")
                     arg.execute()
             except Exception as e:
                 TrasactionManager.log.e("Erro ao processar a transação: " + str(e))

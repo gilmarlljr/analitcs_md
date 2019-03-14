@@ -1,5 +1,6 @@
 import threading
 
+from peewee import DoesNotExist
 from praw import Reddit
 
 from core.logger import Logger
@@ -12,16 +13,17 @@ class RedditGather(threading.Thread):
     log = Logger().setLogger("[Reddit Gather Process]")
 
     def __init__(self, connector: Reddit, url):
-        threading.Thread.__init__(self)
+        super(RedditGather, self).__init__()
         self.connector = connector
         self.url = url
 
     def run(self):
         RedditGather.log.d("iniciando processo de coleta da url:" + self.url)
         subreddit = self.connector.subreddit(self.url)
-        new_subreddit = subreddit.new(limit=100)
+        new_subreddit = subreddit.new(limit=20)
         posts = []
         count = 0
+        colected = 0
         for submission in new_subreddit:
             try:
                 username = submission.author.name
@@ -37,16 +39,18 @@ class RedditGather(threading.Thread):
                     'main_url': self.url,
                     'social_media': Post.SOCIAL_MEDIAS.REDDIT,
                     'md5': md5_text(
-                        str(str(Post.SOCIAL_MEDIAS.REDDIT) + "|" + username + "|" + submission.title + "|" + content))
+                        str(str(Post.SOCIAL_MEDIAS.REDDIT) + "|" + username + "|" + submission.title + "|" + self.url))
                     }
-            posts.append(post)
+            try:
+                Post.get(Post.md5 == post.get('md5'))
+            except DoesNotExist:
+                posts.append(post)
             count += 1
-            if count == 10:
-                TrasactionManager.trasaction(Post.insert_many(posts).on_conflict('replace'))
-                count = 0
+            if posts.__len__() == 10 or (count == 100 and posts.__len__() != 0):
+                TrasactionManager.trasaction(Post.insert_many(posts).on_conflict_ignore())
+                colected += posts.__len__()
                 posts = []
-
-        RedditGather.log.d("[SUCESS] Coleta da URL: " + self.url)
+        RedditGather.log.d("[SUCESS] Coleta da URL '" + self.url + "' coletado " + str(colected) + " posts.")
 
     def verify_md5(self, posts):
         verified_posts = []
