@@ -2,10 +2,11 @@ import asyncio
 
 from core import constants
 from core.config.config_loader import ConfigLoader
+from core.embedding.embedding_task import EmpathTask
 from core.persistence.db import TrasactionManager, DatabaseFactory
 from core.task_manager import TaskManager
 from gather.connector import Connector
-from gather.gather_app import GatherTask
+from gather.gather_task import GatherTask
 
 __version__ = constants.app_version
 
@@ -17,6 +18,4 @@ if __name__ == '__main__':
     reddit_config = config.reddit_config.get()
     con = Connector.reddit(reddit_config)
     gather_task = GatherTask(con)
-    TaskManager({gather_task}).execute()
-    loop = asyncio.get_event_loop()
-    loop.run_forever()
+    TaskManager({gather_task,EmpathTask()}).execute()

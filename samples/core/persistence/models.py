@@ -3,7 +3,7 @@ from datetime import datetime
 import peewee
 
 from core.path import Path
-from core.util import md5_text, CustomEnum
+from core.util import CustomEnum
 
 db = peewee.SqliteDatabase(Path.db)
 
@@ -54,5 +54,8 @@ class Post(BaseModel):
     date_time = peewee.DateTimeField(null=True, default=datetime.now())
     likes_score = peewee.IntegerField(null=True)
     url = peewee.CharField(max_length=250, null=True)
-    md5 = peewee.CharField(max_length=32,unique=True,index=True,null=False)
+    md5 = peewee.CharField(max_length=32, unique=True, index=True, null=False)
     main_url = peewee.CharField(max_length=250, null=True)
+    content_cleaned = peewee.BooleanField(default=False)
+    empath = peewee.BooleanField(default=False)
+    word_to_vec = peewee.BooleanField(default=False)

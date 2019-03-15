@@ -1,4 +1,5 @@
 import threading
+import uuid
 
 from peewee import DoesNotExist
 from praw import Reddit
@@ -14,13 +15,14 @@ class RedditGather(threading.Thread):
 
     def __init__(self, connector: Reddit, url):
         super(RedditGather, self).__init__()
+        self.name = self.name.replace("Thread","RedditGather")
         self.connector = connector
         self.url = url
 
     def run(self):
         RedditGather.log.d("iniciando processo de coleta da url:" + self.url)
         subreddit = self.connector.subreddit(self.url)
-        new_subreddit = subreddit.new(limit=20)
+        new_subreddit = subreddit.new(limit=200)
         posts = []
         count = 0
         colected = 0

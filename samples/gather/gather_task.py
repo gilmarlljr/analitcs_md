@@ -9,9 +9,10 @@ from gather.process import RedditGather
 
 
 class GatherTask(Task):
-    log = Logger().setLogger("[Gather APP]")
+    log = Logger().setLogger("[Gather Task]")
 
     def __init__(self, connector):
+        #prctl.set_name("sleeping tiger")
         super(GatherTask, self).__init__()
         self.connector = connector
 
@@ -21,12 +22,12 @@ class GatherTask(Task):
         return True
 
     def interval(self):
-        return 60*10
+        return 60*5 #5 min
 
     def reddit_process(self):
         GatherTask.log.d("iniciando processo de coleta")
-        for pages in RedditPage.select().where(RedditPage.reddit_config_id == 1):
-            RedditGather(self.connector, pages.url).start()
+        # for pages in RedditPage.select().where(RedditPage.reddit_config_id == 1):
+        #     RedditGather(self.connector, pages.url).start()
 
 
 
