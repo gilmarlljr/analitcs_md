@@ -2,7 +2,7 @@ import asyncio
 
 from core import constants
 from core.config.config_loader import ConfigLoader
-from core.embedding.embedding_task import EmpathTask
+from core.embedding.embedding_task import EmpathTask, TextCleanTask
 from core.persistence.db import TrasactionManager, DatabaseFactory
 from core.task_manager import TaskManager
 from gather.connector import Connector
@@ -18,4 +18,6 @@ if __name__ == '__main__':
     reddit_config = config.reddit_config.get()
     con = Connector.reddit(reddit_config)
     gather_task = GatherTask(con)
-    TaskManager({gather_task,EmpathTask()}).execute()
+
+    text_clean_task = TextCleanTask()
+    TaskManager({gather_task,text_clean_task}).execute()

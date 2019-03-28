@@ -1,26 +1,11 @@
-import HTMLParser
-import pycontractions
+import re
+
 
 class TextCleaner:
-    def __init__(self, text: str):
-        self.original_text = text
-        self.cleaned_text = ''
-
-    def clean(self):
-        self.cleaned_text = TextCleaner.html_parser(self.original_text)
-        self.cleaned_text = TextCleaner.utf8_decode(self.cleaned_text)
-        self.cleaned_text = TextCleaner.
-        self.cleaned_text = TextCleaner.
-        self.cleaned_text = TextCleaner.
-        self.cleaned_text = TextCleaner.
-        self.cleaned_text = TextCleaner.
-        return self.cleaned_text;
-
-    @staticmethod
-    def html_parser(text):
-        html_parser = HTMLParser.HTMLParser()
-        return html_parser.unescape(text)
-
-    @staticmethod
-    def utf8_decode(text):
-        return text.decode("utf8").encode('ascii','ignore')
+    remove_url = lambda x: re.sub(r"http\S+", "", x)
+    words_count = lambda x: len(str(x.replace('[^\w\s]', '')).split(" "))
+    characters_count = lambda x: 1
+    stopwords_count = lambda x: 1
+    numerics_count = lambda x: 1
+    uppercase_count = lambda x: 1
+    average_word_length = lambda x: 1

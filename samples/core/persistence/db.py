@@ -35,7 +35,8 @@ class DatabaseFactory:
         self.connect()
         if version == 0:
             DatabaseFactory.log.i("Criando novo db")
-            self.database.create_tables([VersionControl, RedditConfig, Config, RedditPage, Post], safe=True)
+            self.database.create_tables([VersionControl, RedditConfig, Config, RedditPage, Post, PostEmbendding],
+                                        safe=True)
             version = int(self.app_version.replace('.', ''))
             VersionControl.insert(id=1, app_version=version).on_conflict('replace').execute()
 

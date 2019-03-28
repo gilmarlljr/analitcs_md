@@ -56,6 +56,16 @@ class Post(BaseModel):
     url = peewee.CharField(max_length=250, null=True)
     md5 = peewee.CharField(max_length=32, unique=True, index=True, null=False)
     main_url = peewee.CharField(max_length=250, null=True)
+
+
+class PostEmbendding(BaseModel):
+    post = peewee.ForeignKeyField(Post)
+    characters_count = peewee.IntegerField()
+    words_count = peewee.IntegerField()
+    stopwords_count = peewee.IntegerField()
+    numerics_count = peewee.IntegerField()
+    uppercase_count = peewee.IntegerField()
+    average_word_length = peewee.FloatField()
     content_cleaned = peewee.BooleanField(default=False)
     empath = peewee.BooleanField(default=False)
     word_to_vec = peewee.BooleanField(default=False)
