@@ -11,13 +11,13 @@ from threading import Thread
 
 from queue import Queue
 
-from core.logger import Logger
+from loguru import logger as log
 
-log = Logger().setLogger("[Gather Task]")
+
 
 def do_stuff(q):
     while True:
-        log.d(str(q.get()))
+        log.debug(str(q.get()))
         time.sleep(randint(0, 9))
         q.task_done()
 

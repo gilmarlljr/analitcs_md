@@ -1,48 +1,61 @@
 import datetime
 import logging
 import os
+import sys
+
+from loguru import logger as log
 
 from core.path import Path
 
 
-class Logger:
-    def __init__(self):
-        # create logger
-        self.logger = logging.getLogger(__file__)
-        self.logger.setLevel(logging.DEBUG)
-        # create formatter
-        self.formatter = logging.Formatter('%(asctime)s %(threadName)s %(levelname)s %(name)s: %(message)s')
+def loguru_config():
+    log_format = "<green>[{time:DD-MM-YYYY HH:mm:ss.SSS}] </green><blue>[{thread.name}]</blue> {name} <level>[{level}] {message}</level>"
+    log.remove()
+    log.add(sys.stdout,
+            format=log_format)
+    log_name = "{time:DD-MM-YYYY}.log"
+    log.add(os.path.join(Path.logs_path, log_name), rotation="500 MB",
+            format=log_format, retention="30 days", compression="zip")
 
-        # create console handler and set level to debug
-        self.ch = logging.StreamHandler()
-        self.ch.setLevel(logging.DEBUG)
-        self.ch.setFormatter(self.formatter)
 
-        # create file handler and set level to debug
-        self.log_filename = datetime.datetime.now().strftime('%Y-%m-%d') + '.log'
+def logging_config():
+    logger = logging.getLogger()
+    # create formatter
+    formatter = logging.Formatter(fmt='[%(asctime)s.%(msecs)03d] [%(threadName)s] [%(levelname)s] %(name)s: %(message)s',
+                                  datefmt='%d-%m-%Y %H:%M:%S')
+    logger.setLevel(logging.INFO)
 
-    # add ch to logger
-    def setLogger(self, name):
-        self.logger = logging.getLogger(name)
-        self.logger.setLevel(logging.DEBUG)
-        self.logger.addHandler(self.ch)
-        fh = logging.FileHandler(filename=os.path.join(Path.logs_path, self.log_filename))
-        fh.setLevel(logging.DEBUG)
-        fh.setFormatter(self.formatter)
-        self.logger.addHandler(fh)
-        return self
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.INFO)
+    stream_handler.setFormatter(formatter)
 
-    def w(self, message):
-        self.logger.warning(message)
+    log_filename = 'libs-logs-' + datetime.datetime.now().strftime('%Y-%m-%d') + '.log'
 
-    def i(self, message):
-        self.logger.info(message)
+    file_handler = logging.FileHandler(filename=os.path.join(Path.lib_logs_path, log_filename))
+    file_handler.setFormatter(formatter)
+    file_handler.setLevel(logging.DEBUG)
 
-    def d(self, message):
-        self.logger.debug(message)
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
 
-    def e(self, message):
-        self.logger.error(message)
 
-    def c(self, message):
-        self.logger.critical(message)
+logging_config()
+loguru_config()
+
+if __name__ == '__main__':
+    @log.catch
+    def my_function(x, y, z):
+        # An error? It's caught anyway!
+        return 1 / (x + y + z)
+
+
+    my_function(0, 0, 0)
+
+    log.debug("TESTE DE LOG")
+    log.info("TESTE DE LOG")
+    log.error("TESTE DE LOG")
+    log.success("TESTE DE LOG")
+    log.warning("TESTE DE LOG")
+    log.critical("TESTE DE LOG")
+
+    log.info("If you're using Python {}, prefer {feature} of course!", 3.6, feature="f-strings")
