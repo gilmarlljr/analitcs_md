@@ -5,7 +5,7 @@ from loguru import logger as log
 from peewee import DoesNotExist
 
 from core.path import Path
-from core.persistence.db.transition_manager import TrasactionManager
+from core.persistence.db.transition_manager import TransactionManager
 from core.persistence.models import Config, RedditConfig, RedditPage
 from core.util import md5_file
 
@@ -25,7 +25,7 @@ class ConfigLoader:
                 log.info("nao ha ateracoes")
                 return config
             else:
-                TrasactionManager.trasaction(Config.delete(), RedditConfig.delete(), RedditPage.delete())
+                TransactionManager.trasaction(Config.delete(), RedditConfig.delete(), RedditPage.delete())
         except DoesNotExist:
             pass
         return ConfigLoader.load_config(json_file_path)
@@ -50,6 +50,6 @@ class ConfigLoader:
             config = Config.insert(id='1', reddit_config_id=1,
                                    md5=md5_file(json_file_path)).on_conflict('replace')
             log.info("Autalizando configuracoes no banco ")
-            if TrasactionManager.trasaction(reddit_config, pages, config) is TrasactionManager.SUCESS:
+            if TransactionManager.trasaction(reddit_config, pages, config) is TransactionManager.SUCESS:
                 return Config.get(Config.id == '1').get()
             return None

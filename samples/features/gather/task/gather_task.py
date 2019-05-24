@@ -5,8 +5,6 @@ from core.persistence.models import RedditPage
 from core.task_manager import Task
 from features.gather.process.reddit_gather_process import RedditGatherProcess
 
-__name__ = "GATHER TASK"
-
 
 class GatherTask(Task):
 

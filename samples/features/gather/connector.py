@@ -4,7 +4,7 @@ from praw.exceptions import ClientException
 
 from core.persistence.models import RedditConfig
 
-__name__ = "CONNECTOR"
+
 
 
 class Connector:

@@ -1,0 +1,9 @@
+[Bb]in
+.idea
+samples/core/__pycache__/
+samples/core/config/__pycache__/
+samples/core/persistence/__pycache__/
+samples/core/persistence/db/__pycache__/
+samples/core/training_models/__pycache__/
+samples/features/embedding/__pycache__/
+venv/

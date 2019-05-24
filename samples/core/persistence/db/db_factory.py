@@ -4,34 +4,39 @@ from playhouse.sqlite_ext import SqliteExtDatabase
 
 from core.persistence.models import *
 
-__name__ = "DB FACTORY"
+
+def check_db_version():
+    try:
+        log.info("Verificando versao do banco")
+        version_control: VersionControl = VersionControl.get(VersionControl.id == '1').get()
+        return version_control.app_version
+    except Exception:
+        pass
+    return 0
 
 
 class DatabaseFactory:
 
     def __init__(self, version: str):
-        self.database = SqliteExtDatabase(Path.db, pragmas=(
-            ('cache_size', -1024 * 64),  # 64MB page-cache.
-            ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
-            ('foreign_keys', 1)))  # Enforce foreign-key constraints.
+        self.database = SqliteExtDatabase(Path.db,
+                                          pragmas=(
+                                              ('cache_size', -1024 * 64),  # 64MB page-cache.
+                                              ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
+                                              ('foreign_keys', 1),  # Enforce foreign-key constraints.
+                                              ('threads ', 10),  # Max thread allowed.
+                                              ('synchronous', 0)  # let OS handle fsync
+                                          )
+                                          )
+
         self.migrator = SqliteMigrator(self.database)
         self.app_version = version
 
     def connect(self):
         self.database.connect()
 
-    def check_db_version(self):
-        try:
-            log.info("Verificando versao do banco")
-            version_control: VersionControl = VersionControl.get(VersionControl.id == '1').get()
-            return version_control.app_version
-        except Exception:
-            pass
-        return 0
-
     def start_db(self):
         log.info("Iniciando migracao do banco")
-        version = self.check_db_version()
+        version = check_db_version()
         log.info("Versao do banco: " + str(version))
         self.connect()
         self.database.drop_tables([PostEmbendding],

@@ -6,7 +6,7 @@ from core.persistence.models import Post, PostEmbendding
 from core.task_manager import Task
 from core.util import b64decode_and_decompress
 
-__name__ = "EMPATH TASK"
+
 
 
 class EmpathTask(Task):

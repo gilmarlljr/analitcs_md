@@ -21,8 +21,9 @@ def loguru_config():
 def logging_config():
     logger = logging.getLogger()
     # create formatter
-    formatter = logging.Formatter(fmt='[%(asctime)s.%(msecs)03d] [%(threadName)s] [%(levelname)s] %(name)s: %(message)s',
-                                  datefmt='%d-%m-%Y %H:%M:%S')
+    formatter = logging.Formatter(
+        fmt='[%(asctime)s.%(msecs)03d] [%(threadName)s] [%(levelname)s] %(name)s: %(message)s',
+        datefmt='%d-%m-%Y %H:%M:%S')
     logger.setLevel(logging.INFO)
 
     stream_handler = logging.StreamHandler()
@@ -39,23 +40,7 @@ def logging_config():
     logger.addHandler(stream_handler)
 
 
-logging_config()
-loguru_config()
-
-if __name__ == '__main__':
-    @log.catch
-    def my_function(x, y, z):
-        # An error? It's caught anyway!
-        return 1 / (x + y + z)
-
-
-    my_function(0, 0, 0)
-
-    log.debug("TESTE DE LOG")
-    log.info("TESTE DE LOG")
-    log.error("TESTE DE LOG")
-    log.success("TESTE DE LOG")
-    log.warning("TESTE DE LOG")
-    log.critical("TESTE DE LOG")
-
-    log.info("If you're using Python {}, prefer {feature} of course!", 3.6, feature="f-strings")
+class LogConfig:
+    def __init__(self):
+        loguru_config()
+        logging_config()

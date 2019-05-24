@@ -35,7 +35,7 @@ class Config(BaseModel):
     reddit_config = peewee.ForeignKeyField(RedditConfig)
 
 
-class Post(BaseModel):
+class User(BaseModel):
     class SOCIAL_MEDIAS(CustomEnum):
         TWITTER = ('T', 'twitter'),
         REDDIT = ('R', 'reddit')
@@ -46,11 +46,17 @@ class Post(BaseModel):
         UNDEFINED = ('U', 'Undefined')
         NONE = ('N', 'None')
 
-    username = peewee.CharField(max_length=50, null=True)
-    title = peewee.CharField(max_length=50, null=True)
-    content = peewee.TextField(null=True)
+    username = peewee.CharField(max_length=50, primary_key=True)
+    display_name = peewee.CharField(max_length=50, null=True)
+    about = peewee.TextField(null=True)
     social_media = peewee.CharField(max_length=1)
     gender = peewee.CharField(max_length=1, default=GENDERS.NONE)
+
+
+class Post(BaseModel):
+    user = peewee.ForeignKeyField(User)
+    title = peewee.CharField(max_length=50, null=True)
+    content = peewee.TextField(null=True)
     date_time = peewee.DateTimeField(null=True, default=datetime.now())
     likes_score = peewee.IntegerField(null=True)
     url = peewee.CharField(max_length=250, null=True)
@@ -66,6 +72,6 @@ class PostEmbendding(BaseModel):
     numerics_count = peewee.IntegerField()
     uppercase_count = peewee.IntegerField()
     average_word_length = peewee.FloatField()
-    content_cleaned = peewee.BooleanField(default=False)
-    empath = peewee.BooleanField(default=False)
-    word_to_vec = peewee.BooleanField(default=False)
+    content_cleaned = peewee.TextField()
+    empath = peewee.TextField()
+    word_to_vec = peewee.TextField()

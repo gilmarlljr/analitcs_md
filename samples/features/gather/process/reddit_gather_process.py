@@ -4,11 +4,11 @@ from loguru import logger as log
 from peewee import DoesNotExist
 from praw import Reddit
 
-from core.persistence.db.transition_manager import TrasactionManager
+from core.persistence.db.transition_manager import TransactionManager
 from core.persistence.models import Post
 from core.util import compress_and_b64encode, md5_text
 
-__name__ = "REDDIT GATHER PROCESS"
+
 
 
 class RedditGatherProcess(threading.Thread):
@@ -49,7 +49,7 @@ class RedditGatherProcess(threading.Thread):
                 posts.append(post)
             count += 1
             if posts.__len__() == 10 or (count == 100 and posts.__len__() != 0):
-                TrasactionManager.trasaction(Post.insert_many(posts).on_conflict_ignore())
+                TransactionManager.trasaction(Post.insert_many(posts).on_conflict_ignore())
                 colected += posts.__len__()
                 posts = []
         log.success("Coleta da URL '" + self.url + "' coletado " + str(colected) + " posts.")
