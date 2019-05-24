@@ -3,7 +3,6 @@
   <component name="dataSourceStorageLocal">
     <data-source name=".db" uuid="c7c2ecbb-18a1-4247-be8d-569c074558a9">
       <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" />
-      <secret-storage>forget</secret-storage>
     </data-source>
   </component>
 </project>

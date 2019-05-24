@@ -44,3 +44,10 @@ class LogConfig:
     def __init__(self):
         loguru_config()
         logging_config()
+
+if __name__ == "__main__":
+    log.debug("teste de log Debug");
+    log.error("teste de log Error");
+    log.success("teste de log Sucess");
+    log.warning("teste de log Warning");
+    log.critical("teste de log Critical");

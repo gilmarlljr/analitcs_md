@@ -31,7 +31,7 @@ class ModelsLoader:
             return
         if not os.path.exists(Path.w2v_model):
             log.debug("Loading: %s" % Path.google_w2v_model)
-            self.word2Vec = KeyedVectors.load_word2vec_format(Path.google_w2v_model, limit=1000000, binary=True)
+            self.word2Vec = KeyedVectors.load_word2vec_format(Path.google_w2v_model, limit=500000, binary=True)
             self.save_w2v()
         else:
             log.debug("Loading: %s" % Path.w2v_model)
