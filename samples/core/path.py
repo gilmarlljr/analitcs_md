@@ -1,5 +1,5 @@
 import os
-
+from loguru import logger as log
 
 class Path:
     """dir"""
@@ -8,7 +8,6 @@ class Path:
     lib_logs_path = os.path.abspath(os.path.join(logs_path, 'libs'))
     bin = os.path.abspath(os.path.join(base_path, 'bin'))
 
-<<<<<<< HEAD
     """files"""
     db = os.path.abspath(os.path.join(base_path, '.db'))
     w2v_model = os.path.abspath(os.path.join(bin, 'w2v_model.bin'))
@@ -39,5 +38,3 @@ class Path:
                 os.mkdir(path)
             except OSError:
                 log.debug("Creation of the directory %s failed" % path)
-=======
->>>>>>> parent of e94d4b1... aaa

@@ -16,7 +16,7 @@ if __name__ == '__main__':
     LogConfig()
     DependenciesDownloader()
     log.success("####")
-    log.success("#### Iniciando o AMDisorder versao: {} \n", __version__)
+    log.success("#### Iniciando o AMDisorder versao: {} ", __version__)
     log.success("####")
     ModelsLoader.getInstance().load_w2v_models()
     db_factory = DatabaseFactory(__version__)

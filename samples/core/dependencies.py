@@ -1,4 +1,7 @@
+import gzip
 import os
+import shutil
+from google_drive_downloader import GoogleDriveDownloader as gdd
 
 import nltk
 
@@ -8,7 +11,6 @@ nltk.data.path.append(os.path.join(Path.bin, 'ntlk_data'))
 nltk.download('stopwords', download_dir=os.path.join(Path.bin, 'ntlk_data'))
 
 class DependenciesDownloader:
-<<<<<<< HEAD
     def __init__(self):
         Path.create_bin()
         self.google_word2vec()
@@ -35,7 +37,3 @@ class DependenciesDownloader:
         else:
             print("%s exists: %s" % (Path.w2v_model,os.path.exists(Path.w2v_model)))
             print("%s exists: %s" % (Path.google_w2v_model,os.path.exists(Path.google_w2v_model)))
-=======
-    nltk.data.path.append(os.path.join(Path.bin, 'ntlk_data'))
-    nltk.download('stopwords', download_dir=os.path.join(Path.bin, 'ntlk_data'))
->>>>>>> parent of e94d4b1... aaa

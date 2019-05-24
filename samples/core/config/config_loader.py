@@ -9,8 +9,6 @@ from core.persistence.db.transition_manager import TransactionManager
 from core.persistence.models import Config, RedditConfig, RedditPage
 from core.util import md5_file
 
-__name__ = "CONFIG LOADER"
-
 
 class ConfigLoader:
 
