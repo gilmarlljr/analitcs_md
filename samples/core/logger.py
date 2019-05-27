@@ -22,7 +22,7 @@ def logging_config():
     logger = logging.getLogger()
     # create formatter
     formatter = logging.Formatter(
-        fmt='[%(asctime)s.%(msecs)03d] [%(threadName)s] [%(levelname)s] %(name)s: %(message)s',
+        fmt='[%(asctime)s.%(msecs)03d] [%(threadName)s] %(name)s [%(levelname)s] %(message)s',
         datefmt='%d-%m-%Y %H:%M:%S')
     logger.setLevel(logging.INFO)
 
@@ -44,6 +44,7 @@ class LogConfig:
     def __init__(self):
         loguru_config()
         logging_config()
+
 
 if __name__ == "__main__":
     log.debug("teste de log Debug");

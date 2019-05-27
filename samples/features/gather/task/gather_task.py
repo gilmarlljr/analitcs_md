@@ -22,5 +22,5 @@ class GatherTask(Task):
 
     def reddit_process(self):
         log.debug("iniciando processo de coleta")
-        # for pages in RedditPage.select().where(RedditPage.reddit_config_id == 1):
-        #     RedditGatherProcess(self.connector, pages.url).start()
+        for pages in RedditPage.select().where(RedditPage.reddit_config_id == 1):
+            RedditGatherProcess(self.connector, pages.url).start()

@@ -3,11 +3,9 @@ from peewee import JOIN
 
 from features.embedding.text_cleaner import TextCleaner
 from core.persistence.db.transition_manager import TransactionManager
-from core.persistence.models import Post, PostEmbendding
+from core.persistence.models import Post, Embendding
 from core.task_manager import Task
 from core.util import b64decode_and_decompress
-
-
 
 
 class TextCleanTask(Task):
@@ -16,8 +14,8 @@ class TextCleanTask(Task):
         super(TextCleanTask, self).__init__()
 
     def execute(self):
-        posts = Post.select().join(PostEmbendding, JOIN.LEFT_OUTER, on=(PostEmbendding.post_id == Post.id)).where(
-            PostEmbendding.id.is_null() or PostEmbendding.content_cleaned == False)
+        posts = Post.select().join(Embendding, JOIN.LEFT_OUTER, on=(Embendding.post_id == Post.id)).where(
+            Embendding.id.is_null() or Embendding.content_cleaned == False)
         embenddings = []
         count = 0
         cleaned = 0
@@ -39,7 +37,7 @@ class TextCleanTask(Task):
             embenddings.append(embendding)
             count += 1
             if embenddings.__len__() == 10 or (count == 100 and embenddings.__len__() != 0):
-                TransactionManager.trasaction(PostEmbendding.insert_many(embenddings).on_conflict_ignore())
+                TransactionManager.trasaction(Embendding.insert_many(embenddings).on_conflict_ignore())
                 cleaned += embenddings.__len__()
                 embenddings = []
 

@@ -39,13 +39,9 @@ class DatabaseFactory:
         version = check_db_version()
         log.info("Versao do banco: " + str(version))
         self.connect()
-        self.database.drop_tables([PostEmbendding],
-                                  safe=True)
-        self.database.create_tables([PostEmbendding],
-                                    safe=True)
         if version == 0:
             log.info("Criando novo db")
-            self.database.create_tables([VersionControl, RedditConfig, Config, RedditPage, Post, PostEmbendding],
+            self.database.create_tables([VersionControl, RedditConfig, Config, RedditPage, Post, Embendding],
                                         safe=True)
             version = int(self.app_version.replace('.', ''))
             VersionControl.insert(id=1, app_version=version).on_conflict('replace').execute()

@@ -64,7 +64,7 @@ class Post(BaseModel):
     main_url = peewee.CharField(max_length=250, null=True)
 
 
-class PostEmbendding(BaseModel):
+class Embendding(BaseModel):
     post = peewee.ForeignKeyField(Post)
     characters_count = peewee.IntegerField()
     words_count = peewee.IntegerField()
