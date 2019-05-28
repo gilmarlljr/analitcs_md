@@ -75,3 +75,5 @@ class Embendding(BaseModel):
     content_cleaned = peewee.TextField()
     empath = peewee.TextField()
     word_to_vec = peewee.TextField()
+
+

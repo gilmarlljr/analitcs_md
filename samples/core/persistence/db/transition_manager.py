@@ -16,7 +16,8 @@ class TransactionManager:
                 for arg in args:
                     arg.execute()
             except Exception as e:
-                log.e("Erro ao processar a transação: " + str(e))
+                log.error("Erro ao processar a transação: " + str(e))
                 transaction.rollback()
                 return TransactionManager.FAILURE
         return TransactionManager.SUCESS
+

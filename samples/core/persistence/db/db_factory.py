@@ -1,3 +1,6 @@
+import inspect
+import sys
+
 from loguru import logger as log
 from playhouse.migrate import SqliteMigrator
 from playhouse.sqlite_ext import SqliteExtDatabase
@@ -39,8 +42,11 @@ class DatabaseFactory:
         version = check_db_version()
         log.info("Versao do banco: " + str(version))
         self.connect()
+
         if version == 0:
             log.info("Criando novo db")
+            models_list = inspect.getmembers(sys.modules[], inspect.isclass)
+            for tuple in models_list:
             self.database.create_tables([VersionControl, RedditConfig, Config, RedditPage, Post, Embendding],
                                         safe=True)
             version = int(self.app_version.replace('.', ''))
