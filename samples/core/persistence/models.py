@@ -1,3 +1,4 @@
+import abc
 from datetime import datetime
 
 import peewee
@@ -11,6 +12,17 @@ db = peewee.SqliteDatabase(Path.db)
 class BaseModel(peewee.Model):
     class Meta:
         database = db
+
+    def to_dict(self):
+        insert_dict = {}
+        fields = self.__class__._meta.fields
+        for attr, value in self.__data__.items():
+            if type(fields[attr]) is peewee.ForeignKeyField:
+                insert_dict[attr + "_id"] = value
+            else:
+                insert_dict[attr] = value
+
+        return insert_dict
 
 
 class VersionControl(BaseModel):
@@ -54,13 +66,13 @@ class User(BaseModel):
 
 
 class Post(BaseModel):
+    md5 = peewee.CharField(max_length=32, primary_key=True, index=True, null=False)
     user = peewee.ForeignKeyField(User)
     title = peewee.CharField(max_length=50, null=True)
     content = peewee.TextField(null=True)
     date_time = peewee.DateTimeField(null=True, default=datetime.now())
     likes_score = peewee.IntegerField(null=True)
     url = peewee.CharField(max_length=250, null=True)
-    md5 = peewee.CharField(max_length=32, unique=True, index=True, null=False)
     main_url = peewee.CharField(max_length=250, null=True)
 
 
@@ -75,5 +87,3 @@ class Embendding(BaseModel):
     content_cleaned = peewee.TextField()
     empath = peewee.TextField()
     word_to_vec = peewee.TextField()
-
-

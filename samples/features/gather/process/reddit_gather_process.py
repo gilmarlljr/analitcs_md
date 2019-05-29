@@ -22,6 +22,7 @@ class RedditGatherProcess(threading.Thread):
         log.debug("iniciando processo de coleta da url:" + self.url)
         subreddit = self.connector.subreddit(self.url)
         new_subreddit = subreddit.new(limit=200)
+
         posts = []
         users = []
         count = 0
@@ -30,37 +31,45 @@ class RedditGatherProcess(threading.Thread):
             user = self.__create_user(submission)
             post = None
             if user is not None:
-                users.append(user)
+                users.append(user.to_dict())
                 post = self.__create_post(user, submission)
             if post is not None:
-                posts.append(post)
+                posts.append(post.to_dict())
             count += 1
-            if posts.__len__() == 10 or (count == 100 and posts.__len__() != 0):
-                TransactionManager.trasaction(User.bulk_create(users).on_conflict_replace())
-                TransactionManager.trasaction(Post.bulk_create(posts).on_conflict_ignore())
+            if posts.__len__() == 10 or (count == 200 and posts.__len__() != 0):
+                log.debug("inserindo "+ str(count))
+                TransactionManager.trasaction(User.insert_many(users).on_conflict_replace())
+                TransactionManager.trasaction(Post.insert_many(posts).on_conflict_ignore())
                 collected += posts.__len__()
                 posts = []
+                users = []
         log.success("Coleta da URL '" + self.url + "' coletado " + str(collected) + " posts.")
 
     def __create_user(self, submission: Submission):
         user = User()
+        user_subreddit = None
         try:
             user.username = submission.author.name
+            user_subreddit = submission.author.subreddit
         except Exception:
             user.username = '[unknown]'
-        user_subreddit = submission.author.subreddit
         if user_subreddit is not None:
             user.display_name = user_subreddit['display_name']
             user.about = user_subreddit['description']
+        else:
+            user.display_name = user.username
+            user.about = ''
         user.gender = User.GENDERS.NONE
         user.social_media = User.SOCIAL_MEDIAS.REDDIT
         return user
+
 
     def __create_post(self, user: User, submission: Submission):
         md5 = md5_text(
             str(str(User.SOCIAL_MEDIAS.REDDIT) + "|" + user.username + "|" + submission.title + "|" + self.url))
         try:
             Post.get(Post.md5 == md5)
+            log.debug("existe "+md5)
             return None
         except DoesNotExist:
             post = Post()

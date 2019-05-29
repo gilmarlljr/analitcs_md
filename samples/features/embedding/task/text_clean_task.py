@@ -24,7 +24,8 @@ class TextCleanTask(Task):
             content = b64decode_and_decompress(post.content)
             content = TextCleaner.remove_url(content)
             text = TextCleaner.expand_contractions(title + " " + content)
-
+            e = Embendding()
+            e.post =post
             embendding = {'post_id': post.id,
                           'characters_count': TextCleaner.characters_count(text),
                           'words_count': TextCleaner.words_count(text),

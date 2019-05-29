@@ -2,12 +2,13 @@ import inspect
 import sys
 
 from loguru import logger as log
+from peewee import ModelBase
 from playhouse.migrate import SqliteMigrator
 from playhouse.sqlite_ext import SqliteExtDatabase
 
 from core.persistence.models import *
 
-
+import core.persistence.models as models
 def check_db_version():
     try:
         log.info("Verificando versao do banco")
@@ -42,12 +43,12 @@ class DatabaseFactory:
         version = check_db_version()
         log.info("Versao do banco: " + str(version))
         self.connect()
-
+        models_list = []
+        for tuple in inspect.getmembers(sys.modules[models.__name__], inspect.isclass):
+            if type(tuple[1]) is ModelBase and tuple[0] is not "BaseModel":
+                models_list.append(tuple[1])
         if version == 0:
             log.info("Criando novo db")
-            models_list = inspect.getmembers(sys.modules[], inspect.isclass)
-            for tuple in models_list:
-            self.database.create_tables([VersionControl, RedditConfig, Config, RedditPage, Post, Embendding],
-                                        safe=True)
+            self.database.create_tables(models_list,safe=True)
             version = int(self.app_version.replace('.', ''))
             VersionControl.insert(id=1, app_version=version).on_conflict('replace').execute()

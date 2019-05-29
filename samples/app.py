@@ -18,7 +18,7 @@ if __name__ == '__main__':
     log.success("####")
     log.success("#### Iniciando o AMDisorder versao: {} ", __version__)
     log.success("####")
-  # ModelsLoader.getInstance().load_w2v_models()
+   # ModelsLoader.getInstance().load_w2v_models()
     db_factory = DatabaseFactory(__version__)
     db_factory.start_db()
     TransactionManager(db_factory.database)
