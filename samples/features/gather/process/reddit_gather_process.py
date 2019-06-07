@@ -3,7 +3,7 @@ import threading
 from loguru import logger as log
 from peewee import DoesNotExist
 from praw import Reddit
-from praw.models import Subreddit, Submission
+from praw.models import Submission
 
 from core.persistence.db.transition_manager import TransactionManager
 from core.persistence.models import Post, User
@@ -37,7 +37,7 @@ class RedditGatherProcess(threading.Thread):
                 posts.append(post.to_dict())
             count += 1
             if posts.__len__() == 10 or (count == 200 and posts.__len__() != 0):
-                log.debug("inserindo "+ str(count))
+                log.debug("inserindo " + str(count))
                 TransactionManager.trasaction(User.insert_many(users).on_conflict_replace())
                 TransactionManager.trasaction(Post.insert_many(posts).on_conflict_ignore())
                 collected += posts.__len__()
@@ -63,13 +63,12 @@ class RedditGatherProcess(threading.Thread):
         user.social_media = User.SOCIAL_MEDIAS.REDDIT
         return user
 
-
     def __create_post(self, user: User, submission: Submission):
         md5 = md5_text(
             str(str(User.SOCIAL_MEDIAS.REDDIT) + "|" + user.username + "|" + submission.title + "|" + self.url))
         try:
             Post.get(Post.md5 == md5)
-            log.debug("existe "+md5)
+            log.debug("existe " + md5)
             return None
         except DoesNotExist:
             post = Post()
