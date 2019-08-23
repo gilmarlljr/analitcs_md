@@ -1,12 +1,14 @@
-import abc
 from datetime import datetime
 
 import peewee
+from playhouse.postgres_ext import PostgresqlExtDatabase
 
 from core.path import Path
 from core.util import CustomEnum
 
-db = peewee.SqliteDatabase(Path.db)
+db = PostgresqlExtDatabase('amd_tcc', user='amd_tcc', password='123',
+                           host='localhost', port=5432,autorollback=True)
+
 
 
 class BaseModel(peewee.Model):

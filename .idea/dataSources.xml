@@ -10,5 +10,11 @@
         <property name="enable_load_extension" value="true" />
       </driver-properties>
     </data-source>
+    <data-source source="LOCAL" name="amd_tcc@localhost" uuid="5d9fcfd4-7867-47a3-aa5e-6a93b4ed9231">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/amd_tcc</jdbc-url>
+    </data-source>
   </component>
 </project>

@@ -38,16 +38,30 @@ class ConfigLoader:
                                                 password=data['reddit_config']['password'],
                                                 user_agent=data['reddit_config']['user_agent'],
                                                 username=data['reddit_config']['username'],
-                                                id=1).on_conflict(
-                'replace')
+                                                id=1) \
+                .on_conflict(conflict_target=RedditConfig.id,
+                             preserve=RedditConfig.id,
+                             update={RedditConfig.client_id: data['reddit_config']['client_id'],
+                                     RedditConfig.client_secret: data['reddit_config']['client_secret'],
+                                     RedditConfig.password: data['reddit_config']['password'],
+                                     RedditConfig.user_agent: data['reddit_config']['user_agent'],
+                                     RedditConfig.username: data['reddit_config']['username']})
             reddit_pages = []
             for page in data['reddit_config']['pages']:
                 reddit_page = {'url': page['url'], 'reddit_config_id': 1}
                 reddit_pages.append(reddit_page)
-            pages = RedditPage.insert_many(reddit_pages).on_conflict('replace')
+            pages = RedditPage.insert_many(reddit_pages) \
+                .on_conflict(conflict_target=RedditPage.url,
+                             preserve=RedditPage.url,
+                             update={RedditPage.reddit_config_id: 1})
+            md5 = md5_file(json_file_path)
             config = Config.insert(id='1', reddit_config_id=1,
-                                   md5=md5_file(json_file_path)).on_conflict('replace')
-            log.info("Autalizando configuracoes no banco ")
+                                   md5=md5) \
+                .on_conflict(conflict_target=Config.id,
+                             preserve=Config.id,
+                             update={Config.md5: md5,
+                                     Config.reddit_config_id: 1})
+            log.info("Atualizando configuracoes no banco")
             if TransactionManager.trasaction(reddit_config, pages, config) is TransactionManager.SUCESS:
                 return Config.get(Config.id == '1').get()
             return None

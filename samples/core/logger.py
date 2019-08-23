@@ -19,15 +19,17 @@ def loguru_config():
 
 
 def logging_config():
+    import logging
+
     logger = logging.getLogger()
     # create formatter
     formatter = logging.Formatter(
         fmt='[%(asctime)s.%(msecs)03d] [%(threadName)s] %(name)s [%(levelname)s] %(message)s',
         datefmt='%d-%m-%Y %H:%M:%S')
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
 
     stream_handler = logging.StreamHandler()
-    stream_handler.setLevel(logging.INFO)
+    stream_handler.setLevel(logging.DEBUG)
     stream_handler.setFormatter(formatter)
 
     log_filename = 'libs-logs-' + datetime.datetime.now().strftime('%Y-%m-%d') + '.log'
@@ -38,6 +40,11 @@ def logging_config():
 
     logger.addHandler(file_handler)
     logger.addHandler(stream_handler)
+    logger_peewee = logging.getLogger('peewee')
+    logger_peewee = logging.getLogger('peewee')
+    logger_peewee.addHandler(file_handler)
+    logger_peewee.addHandler(stream_handler)
+
 
 
 class LogConfig:

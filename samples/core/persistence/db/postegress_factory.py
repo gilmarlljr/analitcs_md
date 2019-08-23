@@ -1,14 +1,15 @@
 import inspect
 import sys
+import time
 
 from loguru import logger as log
 from peewee import ModelBase
-from playhouse.migrate import SqliteMigrator
-from playhouse.sqlite_ext import SqliteExtDatabase
-
-from core.persistence.models import *
+from playhouse.migrate import PostgresqlMigrator
 
 import core.persistence.models as models
+from core.persistence.models import *
+
+
 def check_db_version():
     try:
         log.info("Verificando versao do banco")
@@ -22,17 +23,11 @@ def check_db_version():
 class DatabaseFactory:
 
     def __init__(self, version: str):
-        self.database = SqliteExtDatabase(Path.db,
-                                          pragmas=(
-                                              ('cache_size', -1024 * 64),  # 64MB page-cache.
-                                              ('journal_mode', 'wal'),  # Use WAL-mode (you should always use this!).
-                                              ('foreign_keys', 1),  # Enforce foreign-key constraints.
-                                              ('threads ', 10),  # Max thread allowed.
-                                              ('synchronous', 0)  # let OS handle fsync
-                                          )
-                                          )
 
-        self.migrator = SqliteMigrator(self.database)
+        self.database = PostgresqlExtDatabase('amd_tcc', user='amd_tcc', password='123',
+                                              host='localhost', port=5432, autocommit=True, autorollback=True)
+
+        self.migrator = PostgresqlMigrator(self.database)
         self.app_version = version
 
     def connect(self):
@@ -49,6 +44,10 @@ class DatabaseFactory:
                 models_list.append(tuple[1])
         if version == 0:
             log.info("Criando novo db")
-            self.database.create_tables(models_list,safe=True)
+            self.database.create_tables(models_list, safe=True)
+            time.sleep(5)
             version = int(self.app_version.replace('.', ''))
-            VersionControl.insert(id=1, app_version=version).on_conflict('replace').execute()
+            VersionControl.insert(id=1, app_version=version) \
+                .on_conflict(conflict_target=VersionControl.id,
+                             preserve=VersionControl.id,
+                             update={VersionControl.app_version: version}).execute()

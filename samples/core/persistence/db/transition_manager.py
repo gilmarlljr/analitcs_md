@@ -11,13 +11,10 @@ class TransactionManager:
 
     @staticmethod
     def trasaction(*args):
-        with TransactionManager.database.atomic() as transaction:
+        for arg in args:
             try:
-                for arg in args:
-                    arg.execute()
+                arg.execute()
             except Exception as e:
-                log.error("Erro ao processar a transação: " + str(e))
-                transaction.rollback()
+                log.error("Erro ao processar a transação["+str(arg.model)+" | "+str(arg)+"]: " + str(e))
                 return TransactionManager.FAILURE
         return TransactionManager.SUCESS
-

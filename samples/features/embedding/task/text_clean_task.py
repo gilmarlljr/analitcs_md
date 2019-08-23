@@ -14,8 +14,8 @@ class TextCleanTask(Task):
         super(TextCleanTask, self).__init__()
 
     def execute(self):
-        posts = Post.select().join(Embendding, JOIN.LEFT_OUTER, on=(Embendding.post_id == Post.id)).where(
-            Embendding.id.is_null() or Embendding.content_cleaned == False)
+        posts = Post.select().join(Embendding, JOIN.LEFT_OUTER, on=(Embendding.post_id == Post.md5)).where(
+            Embendding.id.is_null() or Embendding.content_cleaned.is_null())
         embenddings = []
         count = 0
         cleaned = 0
@@ -24,9 +24,7 @@ class TextCleanTask(Task):
             content = b64decode_and_decompress(post.content)
             content = TextCleaner.remove_url(content)
             text = TextCleaner.expand_contractions(title + " " + content)
-            e = Embendding()
-            e.post =post
-            embendding = {'post_id': post.id,
+            embendding = {'post_id': post.md5,
                           'characters_count': TextCleaner.characters_count(text),
                           'words_count': TextCleaner.words_count(text),
                           'stopwords_count': TextCleaner.stopwords_count(text),
