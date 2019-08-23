@@ -68,7 +68,7 @@ class User(BaseModel):
 
 
 class Post(BaseModel):
-    md5 = peewee.CharField(max_length=32, primary_key=True, index=True, null=False)
+    md5 = peewee.CharField(max_length=32, primary_key=True, index=True)
     user = peewee.ForeignKeyField(User)
     title = peewee.CharField(max_length=50, null=True)
     content = peewee.TextField(null=True)
