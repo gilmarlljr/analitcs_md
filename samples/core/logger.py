@@ -26,7 +26,7 @@ def logging_config():
     formatter = logging.Formatter(
         fmt='[%(asctime)s.%(msecs)03d] [%(threadName)s] %(name)s [%(levelname)s] %(message)s',
         datefmt='%d-%m-%Y %H:%M:%S')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
 
     stream_handler = logging.StreamHandler()
     stream_handler.setLevel(logging.DEBUG)
@@ -41,7 +41,7 @@ def logging_config():
     logger.addHandler(file_handler)
     logger.addHandler(stream_handler)
     logger_peewee = logging.getLogger('peewee')
-    logger_peewee = logging.getLogger('peewee')
+    logger_peewee.setLevel(logging.INFO)
     logger_peewee.addHandler(file_handler)
     logger_peewee.addHandler(stream_handler)
 

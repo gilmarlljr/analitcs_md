@@ -1,11 +1,11 @@
 from loguru import logger as log
 from peewee import JOIN
 
-from features.embedding.text_cleaner import TextCleaner
 from core.persistence.db.transition_manager import TransactionManager
 from core.persistence.models import Post, Embendding
 from core.task_manager import Task
 from core.util import b64decode_and_decompress
+from features.embedding.text_cleaner import TextCleaner
 
 
 class TextCleanTask(Task):
@@ -41,8 +41,6 @@ class TextCleanTask(Task):
                 embenddings = []
 
         log.debug("[SUCESS] Foi realizada a limpeza de " + str(cleaned) + " posts.")
-        # print(lexicon.analyze(
-        #     , normalize=True))
 
     def interval(self):
         return 60 * 5

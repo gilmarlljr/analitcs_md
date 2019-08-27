@@ -40,7 +40,6 @@ class ConfigLoader:
                                                 username=data['reddit_config']['username'],
                                                 id=1) \
                 .on_conflict(conflict_target=RedditConfig.id,
-                             preserve=RedditConfig.id,
                              update={RedditConfig.client_id: data['reddit_config']['client_id'],
                                      RedditConfig.client_secret: data['reddit_config']['client_secret'],
                                      RedditConfig.password: data['reddit_config']['password'],

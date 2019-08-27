@@ -3,6 +3,8 @@ import re
 from loguru import logger as log
 from nltk.corpus import stopwords
 
+from core.training_models.traning_models import ExpandContractions
+
 
 class TextCleaner:
     stop = stopwords.words('english')
@@ -47,4 +49,4 @@ class TextCleaner:
     @staticmethod
     @log.catch
     def expand_contractions(sentence):
-        return sentence  # ExpandContractions.cont.expand_texts([sentence], precise=True)
+        return ExpandContractions.cont.expand_texts([sentence], precise=True)
