@@ -25,9 +25,9 @@ if __name__ == '__main__':
     TransactionManager(db_factory.database)
     db_factory.start_db()
     config = ConfigLoader.get_config()
-    reddit_config = config.reddit_config.get()
-    con = Connector.reddit(reddit_config)
-    gather_task = GatherTask(con)
+    # reddit_config = config.reddit_config.get()
+    # con = Connector.reddit(reddit_config)
+    # gather_task = GatherTask(con)
 
     text_clean_task = TextCleanTask()
-    TaskManager({gather_task, text_clean_task}).execute()
+    TaskManager({text_clean_task}).execute()
