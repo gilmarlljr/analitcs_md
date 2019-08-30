@@ -1,8 +1,5 @@
-import re
 from loguru import logger as log
 from nltk.corpus import stopwords
-
-from core.training_models.traning_models import ExpandContractions
 
 
 class TextDataExtractor:
