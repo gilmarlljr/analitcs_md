@@ -21,6 +21,7 @@ class RedditGatherProcess(threading.Thread):
         self.url = url
 
     def run(self):
+
         log.debug("iniciando processo de coleta da url:" + self.url)
         subreddit = self.connector.subreddit(self.url)
         new_subreddit = subreddit.new(limit=post_limit)

@@ -29,5 +29,5 @@ if __name__ == '__main__':
     # con = Connector.reddit(reddit_config)
     # gather_task = GatherTask(con)
 
-    text_clean_task = TextCleanTask()
-    TaskManager({text_clean_task}).execute()
+    # text_clean_task = TextCleanTask()
+    # TaskManager({text_clean_task}).execute()

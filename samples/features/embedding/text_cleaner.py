@@ -2,7 +2,7 @@ import re
 
 from loguru import logger as log
 
-from core.training_models.traning_models import ExpandContractions
+from features.embedding.contractions import expandContractions
 
 
 class TextCleaner:
@@ -20,12 +20,9 @@ class TextCleaner:
 
     @log.catch
     def expand_contractions(self, sentence):
-        new_sentence = ""
-        for phrase in list(
-                ExpandContractions().cont.expand_texts(re.compile("[.!?]").split(re.sub(r"[’`´]", "", sentence)),
-                                                       precise=True)):
-            new_sentence += phrase + "."
-        return new_sentence
+        new_sentence = re.sub(r"[’`´]", "'", sentence)
+        new_sentence = re.sub(r"[.!?]", ".", new_sentence)
+        return expandContractions(new_sentence)
 
     @log.catch
     def remove_whitespaces(self, sentence):

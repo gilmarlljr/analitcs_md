@@ -14,7 +14,7 @@ class ConfigLoader:
 
     @staticmethod
     def get_config():
-        json_file_path = os.path.join(Path.base_path, 'config.json')
+        json_file_path = os.path.join(Path.base_dir, 'config.json')
         try:
             log.info("Carregando configuracoes do Banco")
             config = Config.get(Config.id == '1').get()

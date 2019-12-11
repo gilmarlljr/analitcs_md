@@ -14,7 +14,7 @@ def loguru_config():
     log.add(sys.stdout,
             format=log_format)
     log_name = "{time:DD-MM-YYYY}.log"
-    log.add(os.path.join(Path.logs_path, log_name), rotation="500 MB",
+    log.add(os.path.join(Path.logs_dir, log_name), rotation="500 MB",
             format=log_format, retention="30 days", compression="zip")
 
 
@@ -34,7 +34,7 @@ def logging_config():
 
     log_filename = 'libs-logs-' + datetime.datetime.now().strftime('%Y-%m-%d') + '.log'
 
-    file_handler = logging.FileHandler(filename=os.path.join(Path.lib_logs_path, log_filename))
+    file_handler = logging.FileHandler(filename=os.path.join(Path.lib_logs_dir, log_filename))
     file_handler.setFormatter(formatter)
     file_handler.setLevel(logging.DEBUG)
 
